@@ -582,38 +582,23 @@
 (function(){
   "use strict";
 
-  /* ================= ICONS ================= */
-  var ICONS = {
-    squat:  '<circle cx="32" cy="10" r="6"/><path d="M32 16 L30 30"/><path d="M30 30 L18 40 L18 52"/><path d="M30 30 L40 40 L40 52"/><path d="M32 16 L20 24"/><path d="M32 16 L44 24"/><line x1="8" y1="56" x2="56" y2="56"/>',
-    hinge:  '<circle cx="18" cy="12" r="6"/><path d="M18 18 L36 32"/><path d="M36 32 L36 52"/><path d="M36 32 L20 38"/><line x1="10" y1="38" x2="18" y2="38" stroke-width="5"/><line x1="8" y1="56" x2="56" y2="56"/>',
-    pushh:  '<circle cx="12" cy="30" r="6"/><line x1="18" y1="30" x2="50" y2="30"/><path d="M28 30 L28 16"/><path d="M38 30 L38 16"/><line x1="22" y1="16" x2="44" y2="16" stroke-width="5"/><line x1="8" y1="44" x2="56" y2="44"/>',
-    pullh:  '<circle cx="44" cy="12" r="6"/><path d="M44 18 L26 32"/><path d="M26 32 L26 52"/><path d="M26 32 L14 52"/><path d="M30 28 L16 28"/><circle cx="14" cy="28" r="3.5"/><line x1="8" y1="56" x2="56" y2="56"/>',
-    pushv:  '<circle cx="28" cy="10" r="6"/><path d="M28 16 L28 38"/><path d="M28 38 L20 56"/><path d="M28 38 L34 56"/><path d="M28 20 L16 20 L16 8"/><path d="M28 20 L40 20 L40 8"/><circle cx="16" cy="6" r="4"/><circle cx="40" cy="6" r="4"/><path d="M50 34 L50 14"/><path d="M46 18 L50 14 L54 18"/>',
-    pullv:  '<circle cx="32" cy="10" r="6"/><path d="M32 16 L32 44"/><path d="M32 44 L22 54"/><path d="M32 44 L42 54"/><path d="M32 22 L18 30"/><path d="M32 22 L46 30"/><line x1="14" y1="30" x2="50" y2="30" stroke-width="5"/>',
-    hipext: '<circle cx="10" cy="36" r="6"/><path d="M10 42 L34 26"/><path d="M34 26 L46 44"/><path d="M46 44 L42 56"/><line x1="4" y1="42" x2="18" y2="42" stroke-width="5"/><line x1="24" y1="20" x2="44" y2="20" stroke-width="5"/><line x1="8" y1="56" x2="56" y2="56"/>',
-    curl:   '<circle cx="24" cy="10" r="6"/><path d="M24 16 L24 40"/><path d="M24 40 L18 56"/><path d="M24 40 L30 56"/><path d="M24 22 L40 26 L38 14"/><circle cx="38" cy="14" r="4"/><path d="M50 34 L50 18"/><path d="M46 22 L50 18 L54 22"/>',
-    tricep: '<circle cx="24" cy="10" r="6"/><path d="M24 16 L24 40"/><path d="M24 40 L18 56"/><path d="M24 40 L30 56"/><path d="M24 22 L24 32 L38 46"/><circle cx="38" cy="46" r="4"/><path d="M50 34 L50 48"/><path d="M46 44 L50 48 L54 44"/>',
-    wrist:  '<line x1="8" y1="44" x2="30" y2="44" stroke-width="5"/><circle cx="8" cy="44" r="4"/><path d="M30 44 L42 36"/><circle cx="42" cy="36" r="4"/><path d="M54 42 L54 28"/><path d="M50 32 L54 28 L58 32"/>',
-    shrug:  '<circle cx="28" cy="10" r="6"/><path d="M28 16 L28 40"/><path d="M28 40 L20 56"/><path d="M28 40 L36 56"/><path d="M28 20 L18 38"/><path d="M28 20 L38 38"/><circle cx="18" cy="38" r="4"/><circle cx="38" cy="38" r="4"/><path d="M14 20 L14 12"/><path d="M10 16 L14 12 L18 16"/><path d="M42 20 L42 12"/><path d="M38 16 L42 12 L46 16"/>',
-    core:   '<circle cx="10" cy="30" r="6"/><line x1="16" y1="32" x2="50" y2="40"/><path d="M16 32 L16 44"/><line x1="8" y1="46" x2="56" y2="46"/>',
-    calf:   '<circle cx="30" cy="10" r="6"/><path d="M30 16 L30 40"/><path d="M30 20 L22 30"/><path d="M30 20 L38 30"/><path d="M30 40 L30 48 L36 52"/><path d="M46 44 L46 32"/><path d="M42 36 L46 32 L50 36"/><line x1="8" y1="56" x2="56" y2="56"/>'
-  };
-  function svgIcon(name, cls){
-    return '<svg class="'+cls+'" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICONS[name]+'</svg>';
-  }
-
   /* ================= DATA ================= */
-  // Este plan NO usa ladder por %1RM en ningún ejercicio: la ficha declara
-  // equipamiento "ninguno / peso corporal", así que no hay carga que
-  // porcentuar. El objeto queda definido porque el motor lo referencia, pero
-  // todos los ejercicios entran con ladder:null y progresan por bw{}.
-  var LADDER = {
-    fuerza:      [ {reps:5,pct:85}, {reps:3,pct:90}, {reps:2,pct:93}, {reps:1,pct:96}, {reps:1,pct:99} ],
-    hipertrofia: [ {reps:12,pct:60}, {reps:10,pct:65}, {reps:8,pct:70}, {reps:6,pct:75} ],
-    tensionModerada: [ {reps:8,pct:72}, {reps:6,pct:76}, {reps:5,pct:80} ]
-  };
-
   var HOME_DAY_WARNING = { title:"El día suave también entrena", text:"Movilidad y caminata, sin apuro. Esto no es relleno entre los días de fuerza: es lo que hace que los días de fuerza rindan. Respira parejo en cada posición, sin trancar el aire, y mantén la cabeza por encima de la cadera. Al pasar del suelo a estar de pie, hazlo en dos tiempos — unos segundos sentado y después arriba." };
+
+  // Texto y comportamiento propios de este plan que el MOTOR compartido lee
+  // en vez de tener hardcodeado — ver docs/superpowers/plans/2026-09-09-motor-modularizado.md.
+  var COPY = {
+    chipGym: "Fuerza", chipHome: "Movilidad",
+    ladderEmptyMsg: "Progresa por nivel de variante y tempo. La dosis exacta de tu nivel actual aparece en la pestaña Hoy.",
+    rmLogTracks: "bw",
+    retestTitle: "Semana de revisión",
+    retestMsgWithLevels: function(blockId, atras){ return 'Recorre tus ejercicios y anota en qué nivel estás en la pestaña «Mi progreso». El plan ya propone nivel '+blockId+' en '+atras.join(", ")+': si te sobran 2 repeticiones o más con buena técnica, ya puedes subir de nivel.'; },
+    retestMsgNoLevels: function(){ return 'Recorre tus ejercicios y anota en qué nivel estás en la pestaña «Mi progreso». Donde te sobren 2 repeticiones o más con buena técnica, ya puedes subir de nivel.'; },
+    cardioOptional: false,
+    safetyFlagWarnGlyph: false,
+    homeWarningClass: "callout-accent",
+    homeWarningGlyph: false
+  };
 
   // Id del plan, no el nombre: este archivo se publica y el prefijo queda a la vista.
   var STORAGE_NS = "p738506_";
@@ -717,7 +702,7 @@
 
   /* ================================================================
      DATOS DEL ESTUDIANTE — esto es lo único que cambia entre planes:
-     desde aquí hasta el marcador MOTOR más abajo (LADDER, SAFETY_MESSAGES,
+     desde aquí hasta el marcador MOTOR más abajo (SAFETY_MESSAGES,
      EXERCISES, dayFull(), BLOCKS, MOBILITY, CARDIO, HOME_DAY_WARNING,
      STORAGE_NS inclusive). Ficha: v5, 6 sep 2026. Ver
      docs/superpowers/specs/2026-09-02-plan-entrenamiento-plantilla-design.md §3–4.
@@ -799,549 +784,654 @@
   /* ================================================================
      MOTOR — periodización, render y persistencia. No se toca al
      crear un plan nuevo; se copia verbatim al archivo del siguiente
-     estudiante.
+     estudiante. Organizado en módulos con interfaz pública (patrón
+     revealing module) — ver
+     docs/superpowers/specs/2026-09-09-motor-modularizado-design.md.
      ================================================================ */
 
-  /* ================= HELPERS ================= */
-  function lsGet(key){ try { return window.localStorage.getItem(STORAGE_NS+key); } catch(e){ return null; } }
-  function lsSet(key,val){ try { window.localStorage.setItem(STORAGE_NS+key,val); } catch(e){} }
-  function lsRemove(key){ try { window.localStorage.removeItem(STORAGE_NS+key); } catch(e){} }
-  function round5(n){ return Math.round(n*2)/2; }
-  function getRM(id){
-    var el = document.getElementById("rm-"+id);
-    if(!el) return null;
-    var v = parseFloat(el.value);
-    return isNaN(v) ? null : v;
-  }
-  function kgLabel(id, pct){
-    var rm = getRM(id);
-    if(rm===null || rm<=0) return "—";
-    return round5(rm*pct/100).toFixed(1).replace(/\.0$/,"") + " kg";
-  }
-  function blockForWeek(w){
-    for(var i=0;i<BLOCKS.length;i++){ if(w>=BLOCKS[i].weekStart && w<=BLOCKS[i].weekEnd) return BLOCKS[i]; }
-    return BLOCKS[0];
-  }
-  // Nivel que se muestra hoy para un ejercicio de bw{}. El marcado por el
-  // estudiante manda; sin marca, manda el bloque (blockId ya ES el nivel
-  // que el bloque propone, 1-4). Spec 2026-09-07 §4.
-  function nivelActual(exId, blockId){
-    var e = EXERCISES[exId];
-    if(!e || !e.bw) return null;
-    var guardado = parseInt(lsGet("nivel_"+exId), 10);
-    var n = (guardado>=1 && guardado<=4) ? guardado : blockId;
-    return e.bw[n] ? n : blockId;
-  }
-  var FUERZA_WAVE = [90,93,96,99];
-  function fuerzaTopForWeek(week){
-    var block = blockForWeek(week);
-    var offset = ((week - block.weekStart) % 4 + 4) % 4;
-    return FUERZA_WAVE[offset];
-  }
-  // Returns the ladder rungs actually prescribed, applying (a) a per-exercise permanent
-  // safety cap (e.g. RDL never exceeds 93%) and (b) the weekly undulating top for fuerza
-  // ladder (90/93/96/99, only reaching 99% once every 4 weeks). weekTopPct=100 means
-  // "no weekly wave truncation" — used for the static Plan Completo reference tables,
-  // where only the permanent per-exercise cap still applies.
-  function ladderRungsFor(exId, ladderType, weekTopPct){
-    if(ladderType !== "fuerza") return LADDER[ladderType];
-    var exCap = (EXERCISES[exId] && EXERCISES[exId].capFuerza) || 100;
-    var effectiveTop = Math.min(weekTopPct===undefined ? 100 : weekTopPct, exCap);
-    var rungs = LADDER.fuerza.filter(function(r){ return r.pct <= effectiveTop; });
-    return rungs.length ? rungs : [LADDER.fuerza[0]];
-  }
-
-  /* ================= RENDER: reference tables (Plan completo) ================= */
-  function renderLadderRefTable(mount, type){
-    var rows = LADDER[type].map(function(r,i){
-      return "<tr><td>"+(i+1)+"</td><td class=\"num\">"+r.reps+"</td><td class=\"num\">"+r.pct+"%</td></tr>";
-    }).join("");
-    document.getElementById(mount).innerHTML = rows;
-  }
-
-  function renderRMLog(){
-    var rows = "";
-    Object.keys(EXERCISES).forEach(function(id){
-      var e = EXERCISES[id];
-      if(!e.bw) return;
-      rows += "<tr><td>"+e.name+"</td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td></tr>";
-    });
-    document.getElementById("rmLogTable").innerHTML = rows;
-  }
-
-  function renderTimeline(){
-    var colorMap = {amber:"var(--amber)", violet:"var(--violet)", accent:"var(--accent)", teal:"var(--teal)"};
-    var chipMap = {amber:"chip-hipertrofia", violet:"chip-cardio", accent:"chip-fuerza", teal:"chip-movilidad"};
-    var html = BLOCKS.map(function(b){
-      return '<div class="tl-item">'+
-        '<div class="tl-weeks">'+b.weeks+'</div>'+
-        '<span class="chip '+chipMap[b.color]+'">'+b.sub+'</span>'+
-        '<h4 style="margin-top:8px;">Bloque '+b.id+' · '+b.nombre+'</h4>'+
-        '<p>'+b.resumen+'</p>'+
-        '<div class="tl-bar"><span style="width:100%; background:'+colorMap[b.color]+';"></span></div>'+
-      '</div>';
-    }).join("");
-    document.getElementById("timelineGrid").innerHTML = html;
-  }
-
-  function renderWeekGrid(){
-    var tagChip = {gym:"chip-fuerza", home:"chip-movilidad", rest:""};
-    var html = WEEK_TEMPLATE.map(function(d){
-      var chip = d.tag==="rest" ? '<span style="font-size:11.5px;color:var(--ink-3);">—</span>' : '<span class="chip '+tagChip[d.tag]+'">'+(d.tag==="gym"?"Fuerza":"Movilidad")+'</span>';
-      return '<div class="day-card"><div class="d-num">'+d.num+'</div><div class="d-name">'+d.name+'</div><div class="d-tag">'+chip+'</div></div>';
-    }).join("");
-    document.getElementById("weekGrid").innerHTML = html;
-  }
-
-  function ladderTableHTML(exId, ladderType){
-    if(ladderType===null){
-      return '<p style="font-size:12.5px;color:var(--ink-2);">Progresa por nivel de variante y tempo. La dosis exacta de tu nivel actual aparece en la pestaña Hoy.</p>';
+  var Icons = (function(){
+    var ICONS = {
+      squat:  '<circle cx="32" cy="10" r="6"/><path d="M32 16 L30 30"/><path d="M30 30 L18 40 L18 52"/><path d="M30 30 L40 40 L40 52"/><path d="M32 16 L20 24"/><path d="M32 16 L44 24"/><line x1="8" y1="56" x2="56" y2="56"/>',
+      hinge:  '<circle cx="18" cy="12" r="6"/><path d="M18 18 L36 32"/><path d="M36 32 L36 52"/><path d="M36 32 L20 38"/><line x1="10" y1="38" x2="18" y2="38" stroke-width="5"/><line x1="8" y1="56" x2="56" y2="56"/>',
+      pushh:  '<circle cx="12" cy="30" r="6"/><line x1="18" y1="30" x2="50" y2="30"/><path d="M28 30 L28 16"/><path d="M38 30 L38 16"/><line x1="22" y1="16" x2="44" y2="16" stroke-width="5"/><line x1="8" y1="44" x2="56" y2="44"/>',
+      pullh:  '<circle cx="44" cy="12" r="6"/><path d="M44 18 L26 32"/><path d="M26 32 L26 52"/><path d="M26 32 L14 52"/><path d="M30 28 L16 28"/><circle cx="14" cy="28" r="3.5"/><line x1="8" y1="56" x2="56" y2="56"/>',
+      pushv:  '<circle cx="28" cy="10" r="6"/><path d="M28 16 L28 38"/><path d="M28 38 L20 56"/><path d="M28 38 L34 56"/><path d="M28 20 L16 20 L16 8"/><path d="M28 20 L40 20 L40 8"/><circle cx="16" cy="6" r="4"/><circle cx="40" cy="6" r="4"/><path d="M50 34 L50 14"/><path d="M46 18 L50 14 L54 18"/>',
+      pullv:  '<circle cx="32" cy="10" r="6"/><path d="M32 16 L32 44"/><path d="M32 44 L22 54"/><path d="M32 44 L42 54"/><path d="M32 22 L18 30"/><path d="M32 22 L46 30"/><line x1="14" y1="30" x2="50" y2="30" stroke-width="5"/>',
+      hipext: '<circle cx="10" cy="36" r="6"/><path d="M10 42 L34 26"/><path d="M34 26 L46 44"/><path d="M46 44 L42 56"/><line x1="4" y1="42" x2="18" y2="42" stroke-width="5"/><line x1="24" y1="20" x2="44" y2="20" stroke-width="5"/><line x1="8" y1="56" x2="56" y2="56"/>',
+      curl:   '<circle cx="24" cy="10" r="6"/><path d="M24 16 L24 40"/><path d="M24 40 L18 56"/><path d="M24 40 L30 56"/><path d="M24 22 L40 26 L38 14"/><circle cx="38" cy="14" r="4"/><path d="M50 34 L50 18"/><path d="M46 22 L50 18 L54 22"/>',
+      tricep: '<circle cx="24" cy="10" r="6"/><path d="M24 16 L24 40"/><path d="M24 40 L18 56"/><path d="M24 40 L30 56"/><path d="M24 22 L24 32 L38 46"/><circle cx="38" cy="46" r="4"/><path d="M50 34 L50 48"/><path d="M46 44 L50 48 L54 44"/>',
+      wrist:  '<line x1="8" y1="44" x2="30" y2="44" stroke-width="5"/><circle cx="8" cy="44" r="4"/><path d="M30 44 L42 36"/><circle cx="42" cy="36" r="4"/><path d="M54 42 L54 28"/><path d="M50 32 L54 28 L58 32"/>',
+      shrug:  '<circle cx="28" cy="10" r="6"/><path d="M28 16 L28 40"/><path d="M28 40 L20 56"/><path d="M28 40 L36 56"/><path d="M28 20 L18 38"/><path d="M28 20 L38 38"/><circle cx="18" cy="38" r="4"/><circle cx="38" cy="38" r="4"/><path d="M14 20 L14 12"/><path d="M10 16 L14 12 L18 16"/><path d="M42 20 L42 12"/><path d="M38 16 L42 12 L46 16"/>',
+      core:   '<circle cx="10" cy="30" r="6"/><line x1="16" y1="32" x2="50" y2="40"/><path d="M16 32 L16 44"/><line x1="8" y1="46" x2="56" y2="46"/>',
+      calf:   '<circle cx="30" cy="10" r="6"/><path d="M30 16 L30 40"/><path d="M30 20 L22 30"/><path d="M30 20 L38 30"/><path d="M30 40 L30 48 L36 52"/><path d="M46 44 L46 32"/><path d="M42 36 L46 32 L50 36"/><line x1="8" y1="56" x2="56" y2="56"/>'
+    };
+    function svgIcon(name, cls){
+      return '<svg class="'+cls+'" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICONS[name]+'</svg>';
     }
-    var rows = ladderRungsFor(exId, ladderType, 100).map(function(r){
-      return '<tr><td class="num">'+r.reps+' reps</td><td class="num">'+r.pct+'%</td><td class="num" data-rm-cell="'+exId+'" data-pct="'+r.pct+'" style="font-family:var(--font-mono);font-weight:650;color:var(--accent);">—</td></tr>';
-    }).join("");
-    return '<div class="tbl-scroll"><table style="min-width:0;"><thead><tr><th class="num">Reps</th><th class="num">% 1RM</th><th class="num">Tu peso</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-  }
+    return { ICONS: ICONS, svgIcon: svgIcon };
+  })();
 
-  function renderDay(day){
-    var items = day.ej.map(function(row){
-      var e = EXERCISES[row.id];
-    if(!e) return "";
-      var ladderChip = row.ladder===null ? "" : (row.ladder==="fuerza" ? '<span class="chip chip-fuerza">Fuerza</span>' : '<span class="chip chip-hipertrofia">Hipertrofia</span>');
-      return '<div class="card panel" style="margin-bottom:10px;">'+
-        '<div class="ex-name-cell">'+ svgIcon(e.icon,"ex-icon") +
-          '<div style="flex:1;"><span class="ex-name">'+e.name+'<span class="en">'+e.en+' · '+e.musculos+'</span></span></div>'+
-          ladderChip+
-        '</div>'+
-        '<div style="margin-top:10px;">'+ ladderTableHTML(row.id, row.ladder) +'</div>'+
-        '<div style="margin-top:10px;"><a class="btnlink" href="'+ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a></div>'+
-      '</div>';
-    }).join("");
-    return '<div class="day-block"><div class="day-title"><h4>'+day.nombre+'</h4></div>'+items+'</div>';
-  }
+  var Storage = (function(){
+    function lsGet(key){ try { return window.localStorage.getItem(STORAGE_NS+key); } catch(e){ return null; } }
+    function lsSet(key,val){ try { window.localStorage.setItem(STORAGE_NS+key,val); } catch(e){} }
+    function lsRemove(key){ try { window.localStorage.removeItem(STORAGE_NS+key); } catch(e){} }
 
-  function renderBlock(b){
-    var chipMap = {amber:"chip-hipertrofia", violet:"chip-cardio", accent:"chip-fuerza", teal:"chip-movilidad"};
-    var days = b.dias.map(renderDay).join("");
-    var html =
-      '<div class="section-head">'+
-        '<div class="section-kicker">'+b.weeks+'</div>'+
-        '<span class="chip '+chipMap[b.color]+'" style="margin-bottom:8px;">'+b.sub+'</span>'+
-        '<h2>Bloque '+b.id+' · '+b.nombre+'</h2>'+
-        '<p class="desc">'+b.resumen+'</p>'+
-      '</div>'+
-      '<div class="callout callout-accent" style="margin-bottom:20px;"><h4>Progresión de este bloque</h4><p>'+b.progresion+'</p></div>'+
-      days;
-    document.getElementById("blockMount-"+b.id).innerHTML = html;
-  }
-
-  function renderMobility(){
-    var rows = MOBILITY.map(function(r){
-      return '<tr><td>'+r[0]+'</td><td><a href="'+ytLink({name:r[1]})+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td class="num">'+r[2]+'</td><td>'+r[3]+'</td></tr>';
-    }).join("");
-    document.getElementById("mobilityTable").innerHTML = rows;
-  }
-
-  function renderCardio(){
-    var rows = CARDIO.map(function(r){
-      return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="num">'+r[3]+'</td></tr>';
-    }).join("");
-    document.getElementById("cardioTable").innerHTML = rows;
-  }
-
-  function ytLink(e){
-    return "https://www.youtube.com/results?search_query="+encodeURIComponent(e.name+" técnica correcta");
-  }
-
-  function renderLibrary(){
-    var html = Object.keys(EXERCISES).map(function(id){
-      var e = EXERCISES[id];
-      if(!e) return "";
-      var cues = e.cues.map(function(c){ return "<li>"+c+"</li>"; }).join("");
-      var safety = e.safety && SAFETY_MESSAGES[e.safety]
-        ? '<div class="safety-flag">'+SAFETY_MESSAGES[e.safety].title+': '+SAFETY_MESSAGES[e.safety].text+'</div>'
-        : "";
-      return '<div class="card exlib-card">'+
-        '<div class="exlib-top">'+ svgIcon(e.icon,"exlib-icon") +
-          '<div><div class="ex-name">'+e.name+'<span class="en">'+e.en+'</span></div><div style="font-size:11.5px;color:var(--ink-3);margin-top:2px;">'+e.patron+' · '+e.musculos+'</div></div>'+
-        '</div>'+
-        '<ul class="exlib-cues">'+cues+'</ul>'+
-        safety+
-        '<div class="exlib-links">'+
-          '<a class="btnlink" href="'+ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a>'+
-        '</div>'+
-      '</div>';
-    }).join("");
-    document.getElementById("exLibraryGrid").innerHTML = html;
-  }
-
-  /* ================= RENDER: Mi progreso tab ================= */
-  function renderRMList(){
-    var kgRows = Object.keys(EXERCISES).map(function(id){
-      var e = EXERCISES[id];
-      if(!e.loaded) return "";
-      return '<div class="rm-row">'+
-        '<div><div class="rm-name">'+e.name+'</div><div class="rm-pat">'+e.patron+'</div></div>'+
-        '<div class="rm-r"><input class="rm-input" type="number" inputmode="decimal" min="0" step="0.5" id="rm-'+id+'" data-ex="'+id+'" placeholder="—"><span class="kgsuf">kg</span></div>'+
-      '</div>';
-    }).join("");
-    var nivelRows = Object.keys(EXERCISES).map(function(id){
-      var e = EXERCISES[id];
-      if(!e.bw) return "";
-      var opts = [1,2,3,4].map(function(n){ return '<option value="'+n+'">Nivel '+n+'</option>'; }).join("");
-      return '<div class="rm-row">'+
-        '<div><div class="rm-name">'+e.name+'</div><div class="rm-pat">'+e.patron+'</div></div>'+
-        '<div class="rm-r"><select class="rm-input" style="width:auto;" id="rm-nivel-'+id+'" data-nivel-ex="'+id+'"><option value="">—</option>'+opts+'</select></div>'+
-      '</div>';
-    }).join("");
-    var html = "";
-    if(kgRows) html += '<div class="rm-group"><h4 class="rm-group-title">Lo que se mide en kilos</h4>'+kgRows+'</div>';
-    if(nivelRows) html += '<div class="rm-group"><h4 class="rm-group-title">Lo que sube por nivel</h4>'+nivelRows+'</div>';
-    document.getElementById("rmList").innerHTML = html;
-  }
-
-  function recalcAll(){
-    var cells = document.querySelectorAll("[data-rm-cell]");
-    cells.forEach(function(c){
-      var id = c.getAttribute("data-rm-cell");
-      var pct = parseFloat(c.getAttribute("data-pct"));
-      c.textContent = kgLabel(id, pct);
-    });
-    Object.keys(EXERCISES).forEach(function(id){
-      var e = EXERCISES[id];
-      if(!e.bw) return;
-      var sel = document.getElementById("rm-nivel-"+id);
-      if(!sel) return;
-      var stored = lsGet("nivel_"+id);
-      sel.value = (stored===null ? "" : stored);
-    });
-    renderToday();
-  }
-
-  function wireRMInputs(){
-    Object.keys(EXERCISES).forEach(function(id){
-      var e = EXERCISES[id];
-      if(e.loaded){
-        var el = document.getElementById("rm-"+id);
-        if(el){
-          var stored = lsGet("oneRM_"+id);
-          if(stored !== null) el.value = stored;
-          el.addEventListener("input", function(){
-            if(el.value === "") { lsRemove("oneRM_"+id); }
-            else { lsSet("oneRM_"+id, el.value); }
-            recalcAll();
-          });
+    // Migración de una sola vez: este plan usaba el nombre del estudiante como
+    // prefijo de guardado, y ese texto quedaba a la vista en el código publicado.
+    // Si queda progreso bajo el prefijo antiguo, se traslada al actual.
+    (function migrarPrefijoGuardado(){
+      try {
+        var ls = window.localStorage, claves = [], previos = [], i, m;
+        for(i=0; i<ls.length; i++) claves.push(ls.key(i));
+        for(i=0; i<claves.length; i++){
+          if(claves[i].indexOf(STORAGE_NS)===0) return; // ya migrado
+          m = claves[i].match(/^(.+?_)(plan_|oneRM_|chk_)/);
+          if(m && !/^p\d{6}_$/.test(m[1]) && previos.indexOf(m[1])===-1) previos.push(m[1]);
         }
-      }
-      if(e.bw){
-        var sel = document.getElementById("rm-nivel-"+id);
-        if(sel){
-          var storedNivel = lsGet("nivel_"+id);
-          if(storedNivel !== null) sel.value = storedNivel;
-          sel.addEventListener("change", function(){
-            if(sel.value === "") { lsRemove("nivel_"+id); }
-            else { lsSet("nivel_"+id, sel.value); }
-            recalcAll();
-          });
+        if(previos.length !== 1) return; // sin datos antiguos, o de más de un plan: no adivinar
+        for(i=0; i<claves.length; i++){
+          if(claves[i].indexOf(previos[0])===0)
+            ls.setItem(STORAGE_NS+claves[i].slice(previos[0].length), ls.getItem(claves[i]));
         }
-      }
-    });
-  }
+      } catch(e){}
+    })();
 
+    return { lsGet: lsGet, lsSet: lsSet, lsRemove: lsRemove };
+  })();
 
-  function wireEpleyCalculator(){
-    var w = document.getElementById("epleyWeight");
-    var r = document.getElementById("epleyReps");
-    var out = document.getElementById("epleyResult");
-    if(!w || !r || !out) return;
-    function recalc(){
-      var weight = parseFloat(w.value);
-      var reps = parseFloat(r.value);
-      if(isNaN(weight) || isNaN(reps) || weight<=0 || reps<=0){ out.textContent = "—"; return; }
-      var oneRM = weight * (1 + reps/30);
-      out.textContent = oneRM.toFixed(1).replace(/\.0$/,"") + " kg";
+  var Schedule = (function(){
+    var TOTAL_PROGRAM_DAYS = 24 * 7; // 168 — one linear pointer through the whole program
+    function blockForWeek(w){
+      for(var i=0;i<BLOCKS.length;i++){ if(w>=BLOCKS[i].weekStart && w<=BLOCKS[i].weekEnd) return BLOCKS[i]; }
+      return BLOCKS[0];
     }
-    w.addEventListener("input", recalc);
-    r.addEventListener("input", recalc);
-  }
-
-  /* ================= HOY TAB ================= */
-  var TOTAL_PROGRAM_DAYS = 24 * 7; // 168 — one linear pointer through the whole program
-  var hoyState = { programDay:1 };
-
-  function loadHoyState(){
-    var pd = parseInt(lsGet("plan_day_seq"),10);
-    hoyState.programDay = (pd>=1 && pd<=TOTAL_PROGRAM_DAYS) ? pd : 1;
-  }
-  function saveProgramDay(){ lsSet("plan_day_seq", String(hoyState.programDay)); }
-
-  function weekFromProgramDay(pd){ return Math.ceil(pd/7); }
-  function dowFromProgramDay(pd){ return ((pd-1)%7)+1; } // 1..7 within the training week
-
-  // Resolves which session happens on a given day-of-week within a given block.
-  // Lee el slot/occ directamente de WEEK_TEMPLATE (dow 1-7) en vez de duplicar el
-  // calendario aquí. Blocks con 2 variantes de día (1,3) usan solo el slot ("A"/"B");
-  // blocks con 4 variantes (2,4) además distinguen la 1ª/2ª ocurrencia de la semana
-  // ("A1"/"A2"/"B1"/"B2") con el campo occ.
-  function resolveSession(block, dow){
-    var tmpl = WEEK_TEMPLATE[dow-1];
-    if(tmpl.tag==="rest") return {type:"rest"};
-    if(tmpl.tag==="home") return {type:"casa"};
-    var dayId = (block.dias.length===2) ? tmpl.slot : (tmpl.slot+tmpl.occ);
-    var day = block.dias.filter(function(d){ return d.id===dayId; })[0];
-    return {type:"gym", day:day};
-  }
-
-  function renderWeekBanners(week){
-    var html = "";
-    var isDeload = DELOAD_WEEKS.indexOf(week)!==-1;
-    var isRetest = RETEST_WEEKS.indexOf(week)!==-1;
-    if(isDeload){
-      html += '<div class="banner banner-deload"><b>Semana de deload</b>Reduce el volumen a la mitad esta semana (menos series, misma técnica). El cuerpo consolida lo acumulado antes de subir de nivel.</div>';
+    function weekFromProgramDay(pd){ return Math.ceil(pd/7); }
+    function dowFromProgramDay(pd){ return ((pd-1)%7)+1; } // 1..7 within the training week
+    // Resolves which session happens on a given day-of-week within a given block.
+    // Lee el slot directamente de WEEK_TEMPLATE (dow 1-7) en vez de duplicar el
+    // calendario aquí — WEEK_TEMPLATE es la única fuente de verdad del día de la
+    // semana. Los bloques con 2 días usan ids "A"/"B"; los que tienen 3+ días
+    // (o repiten sesiones en la semana) usan slot+occ para desambiguar (ej. "A1","B1","C1").
+    function resolveSession(block, dow){
+      var tmpl = WEEK_TEMPLATE[dow-1];
+      if(tmpl.tag==="rest") return {type:"rest"};
+      if(tmpl.tag==="home") return {type:"casa"};
+      var dayId = (block.dias.length===2) ? tmpl.slot : (tmpl.slot+tmpl.occ);
+      var day = block.dias.filter(function(d){ return d.id===dayId; })[0];
+      return {type:"gym", day:day};
     }
-    if(isRetest){
-      var block = blockForWeek(week);
-      var atras = Object.keys(EXERCISES).filter(function(id){
-        var e = EXERCISES[id];
-        return e.bw && nivelActual(id, block.id) < block.id;
-      }).map(function(id){ return EXERCISES[id].name; });
-      var retestMsg = atras.length
-        ? 'Recorre tus ejercicios y anota en qué nivel estás en la pestaña «Mi progreso». El plan ya propone nivel '+block.id+' en '+atras.join(", ")+': si te sobran 2 repeticiones o más con buena técnica, ya puedes subir de nivel.'
-        : 'Recorre tus ejercicios y anota en qué nivel estás en la pestaña «Mi progreso». Donde te sobren 2 repeticiones o más con buena técnica, ya puedes subir de nivel.';
-      html += '<div class="banner banner-retest"><b>Semana de revisión</b>'+retestMsg+'</div>';
+    return { TOTAL_PROGRAM_DAYS: TOTAL_PROGRAM_DAYS, blockForWeek: blockForWeek, weekFromProgramDay: weekFromProgramDay, dowFromProgramDay: dowFromProgramDay, resolveSession: resolveSession };
+  })();
+
+  var Progression = (function(){
+    var LADDER = {
+      fuerza:          [ {reps:5,pct:85}, {reps:3,pct:90}, {reps:2,pct:93}, {reps:1,pct:96}, {reps:1,pct:99} ],
+      hipertrofia:     [ {reps:12,pct:60}, {reps:10,pct:65}, {reps:8,pct:70}, {reps:6,pct:75} ],
+      // Tercer nivel, solo para aislamiento de codo (curl, extensión de tríceps) en
+      // Bloques 2-4: mantiene el estímulo de tensión de "fuerza" sin acercarse a
+      // series de 1-3 reps cerca del 100% 1RM en una sola articulación pequeña —
+      // ver SAFETY_MESSAGES.aislamiento_codo y §metodologia.
+      tensionModerada: [ {reps:8,pct:72}, {reps:6,pct:76}, {reps:5,pct:80} ]
+    };
+    function round5(n){ return Math.round(n*2)/2; }
+    var FUERZA_WAVE = [90,93,96,99];
+    function fuerzaTopForWeek(week){
+      var block = Schedule.blockForWeek(week);
+      var offset = ((week - block.weekStart) % 4 + 4) % 4;
+      return FUERZA_WAVE[offset];
     }
-    document.getElementById("weekBanners").innerHTML = html;
-  }
+    // Returns the ladder rungs actually prescribed, applying (a) a per-exercise permanent
+    // safety cap (via EXERCISES[id].capFuerza, e.g. a hinge exercise capped at 93%) and
+    // (b) the weekly undulating top for fuerza
+    // ladder (90/93/96/99, only reaching 99% once every 4 weeks). weekTopPct=100 means
+    // "no weekly wave truncation" — used for the static Plan Completo reference tables,
+    // where only the permanent per-exercise cap still applies.
+    function ladderRungsFor(exId, ladderType, weekTopPct){
+      if(ladderType !== "fuerza") return LADDER[ladderType];
+      var exCap = (EXERCISES[exId] && EXERCISES[exId].capFuerza) || 100;
+      var effectiveTop = Math.min(weekTopPct===undefined ? 100 : weekTopPct, exCap);
+      var rungs = LADDER.fuerza.filter(function(r){ return r.pct <= effectiveTop; });
+      return rungs.length ? rungs : [LADDER.fuerza[0]];
+    }
+    // Nivel que se muestra hoy para un ejercicio de bw{}. El marcado por el
+    // estudiante manda; sin marca, manda el bloque (blockId ya ES el nivel
+    // que el bloque propone, 1-4). Spec 2026-09-07 §4.
+    function nivelActual(exId, blockId){
+      var e = EXERCISES[exId];
+      if(!e || !e.bw) return null;
+      var guardado = parseInt(Storage.lsGet("nivel_"+exId), 10);
+      var n = (guardado>=1 && guardado<=4) ? guardado : blockId;
+      return e.bw[n] ? n : blockId;
+    }
+    return { LADDER: LADDER, fuerzaTopForWeek: fuerzaTopForWeek, ladderRungsFor: ladderRungsFor, nivelActual: nivelActual, round5: round5 };
+  })();
 
-  function rungRowHTML(exId, ladderType, rung, idx, storageKey){
-    var checked = lsGet(storageKey) === "1";
-    return '<label class="rung-row'+(checked?" is-done":"")+'" data-chk-key="'+storageKey+'">'+
-      '<input type="checkbox" class="rung-check"'+(checked?" checked":"")+'>'+
-      '<span class="rung-reps">Serie '+(idx+1)+' · '+rung.reps+' reps <span class="rung-pct">('+rung.pct+'% 1RM)</span></span>'+
-      '<span class="rung-kg" data-rm-cell="'+exId+'" data-pct="'+rung.pct+'">—</span>'+
-    '</label>';
-  }
+  var OneRM = (function(){
+    function getRM(id){
+      var el = document.getElementById("rm-"+id);
+      if(!el) return null;
+      var v = parseFloat(el.value);
+      return isNaN(v) ? null : v;
+    }
+    function kgLabel(id, pct){
+      var rm = getRM(id);
+      if(rm===null || rm<=0) return "—";
+      return Progression.round5(rm*pct/100).toFixed(1).replace(/\.0$/,"") + " kg";
+    }
+    return { getRM: getRM, kgLabel: kgLabel };
+  })();
 
-  function workoutCardHTML(row, blockId, programDay, weekTopPct){
-    var e = EXERCISES[row.id];
-    if(!e) return "";
-    var body, nivelControls = "";
-    if(row.ladder===null){
-      var nivel = nivelActual(row.id, blockId);
-      var dose = (e.bw && e.bw[nivel]) ? e.bw[nivel] : {sets:3, variante:"", dosis:"progresión gradual"};
-      var bwRows = [];
-      for(var si=0; si<dose.sets; si++){
-        var bwKey = "chk_pd"+programDay+"_"+row.id+"_"+si;
-        var bwChecked = lsGet(bwKey) === "1";
-        bwRows.push('<label class="rung-row'+(bwChecked?" is-done":"")+'" data-chk-key="'+bwKey+'">'+
-          '<input type="checkbox" class="rung-check"'+(bwChecked?" checked":"")+'>'+
-          '<span class="rung-reps">Serie '+(si+1)+' · '+dose.dosis+'</span>'+
-        '</label>');
-      }
-      body = bwRows.join("");
-      if(e.bw){
-        var opts = [1,2,3,4].map(function(n){
-          return '<option value="'+n+'"'+(n===nivel?" selected":"")+'>Nivel '+n+'</option>';
-        }).join("");
-        nivelControls = '<select class="nivel-select" data-nivel-ex="'+row.id+'">'+opts+'</select>';
-        var nvRows = [1,2,3,4].map(function(n){
-          var lv = e.bw[n];
-          return '<div class="nv-row'+(n===nivel?" is-current":"")+'"><span class="nv-dot">'+(n===nivel?"●":n)+'</span><span>'+lv.variante+' · '+lv.dosis+'</span></div>';
-        }).join("");
-        body += '<details class="niveles"><summary></summary><div class="niveles-list">'+nvRows+'</div></details>';
-      }
-    } else {
-      var rm = getRM(row.id);
-      var rungs = (row.ladder==="fuerza") ? ladderRungsFor(row.id, row.ladder, weekTopPct) : LADDER[row.ladder];
-      var rows = rungs.map(function(r,i){
-        var key = "chk_pd"+programDay+"_"+row.id+"_"+i;
-        return rungRowHTML(row.id, row.ladder, r, i, key);
+  var RenderPlanCompleto = (function(){
+    function renderLadderRefTable(mount, type){
+      var rows = Progression.LADDER[type].map(function(r,i){
+        return "<tr><td>"+(i+1)+"</td><td class=\"num\">"+r.reps+"</td><td class=\"num\">"+r.pct+"%</td></tr>";
       }).join("");
-      body = rows;
-      if(rm===null){
-        body += '<div class="rm-nudge" style="margin-top:8px;"><span>Falta tu 1RM para calcular el peso.</span><button type="button" data-goto-rm data-focus-ex="'+row.id+'">Ingresar</button></div>';
-      }
+      document.getElementById(mount).innerHTML = rows;
     }
-    var safety = e.safety && SAFETY_MESSAGES[e.safety]
-      ? '<div class="safety-flag">'+SAFETY_MESSAGES[e.safety].title+': '+SAFETY_MESSAGES[e.safety].text+'</div>'
-      : "";
-    var cues = e.cues.map(function(c){ return "<li>"+c+"</li>"; }).join("");
-    var videoBtn = '<a class="btnlink" href="'+ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a>';
-    return '<div class="card panel wk-card">'+
-      '<div class="wk-head">'+ svgIcon(e.icon,"ex-icon") +
-        '<div><div class="wk-name">'+e.name+'</div><div class="wk-sub">'+e.en+' · '+e.musculos+'</div></div>'+
-      '</div>'+
-      '<div class="wk-controls">'+nivelControls+videoBtn+'</div>'+
-      '<div style="margin-top:10px;">'+body+'</div>'+
-      safety+
-      '<details class="tech"><summary></summary><ul class="exlib-cues">'+cues+'</ul></details>'+
-    '</div>';
-  }
 
-  function renderToday(){
-    var pd = hoyState.programDay;
-    var week = weekFromProgramDay(pd);
-    var dow = dowFromProgramDay(pd);
-    var block = blockForWeek(week);
-    var session = resolveSession(block, dow);
+    function renderRMLog(){
+      var rows = "";
+      Object.keys(EXERCISES).forEach(function(id){
+        var e = EXERCISES[id];
+        if(COPY.rmLogTracks==="bw" ? !e.bw : !e.loaded) return;
+        rows += "<tr><td>"+e.name+"</td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td><td class=\"num\"></td></tr>";
+      });
+      document.getElementById("rmLogTable").innerHTML = rows;
+    }
 
-    document.getElementById("seqSubtitle").textContent = "Semana "+week+" de 24 · Día "+dow+" de 7 de tu ciclo";
-    renderWeekBanners(week);
-    document.getElementById("blockTag").innerHTML = 'Bloque '+block.id+' · <b>'+block.nombre+'</b> ('+block.sub+') — '+block.weeks;
-
-    var mount = document.getElementById("todayMount");
-
-    if(session.type==="rest"){
-      document.getElementById("seqTitle").textContent = "Hoy: descanso";
-      mount.innerHTML = '<div class="card panel rest-card">'+
-        '<h3>Día de descanso</h3>'+
-        '<p>No entrenas hoy. Duerme bien, hidrátate y deja que el cuerpo asimile lo trabajado. Mañana retoma donde corresponda.</p>'+
-      '</div>';
-    } else if(session.type==="casa"){
-      document.getElementById("seqTitle").textContent = "Hoy: movilidad y cardio (casa)";
-      var mobRows = MOBILITY.filter(function(r){ return r[0]==="Todos" || r[0].indexOf(String(block.id))!==-1; })
-        .map(function(r){ return '<tr><td><a href="'+ytLink({name:r[1]})+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td class="num">'+r[2]+'</td><td>'+r[3]+'</td></tr>'; }).join("");
-      var cardioRow = CARDIO[block.id-1];
-      mount.innerHTML =
-        '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">Movilidad y flexibilidad</div>'+
-        '<div class="tbl-scroll"><table><thead><tr><th>Ejercicio</th><th class="num">Dosis</th><th>Foco</th></tr></thead><tbody>'+mobRows+'</tbody></table></div>'+
-        '<div class="callout callout-accent" style="margin-top:14px;"><h4>'+HOME_DAY_WARNING.title+'</h4><p>'+HOME_DAY_WARNING.text+'</p></div>'+
-        '<div class="section-kicker" style="margin-top:20px;">Cardio de hoy</div>'+
-        '<div class="card panel" style="margin-top:8px;"><p style="font-size:13.5px;"><strong>'+cardioRow[2]+'</strong><br><span style="color:var(--ink-2); font-size:12.5px;">'+cardioRow[1]+' · '+cardioRow[3]+'</span></p></div>'+
+    function renderTimeline(){
+      var colorMap = {amber:"var(--amber)", violet:"var(--violet)", accent:"var(--accent)", teal:"var(--teal)"};
+      var chipMap = {amber:"chip-hipertrofia", violet:"chip-cardio", accent:"chip-fuerza", teal:"chip-movilidad"};
+      var html = BLOCKS.map(function(b){
+        return '<div class="tl-item">'+
+          '<div class="tl-weeks">'+b.weeks+'</div>'+
+          '<span class="chip '+chipMap[b.color]+'">'+b.sub+'</span>'+
+          '<h4 style="margin-top:8px;">Bloque '+b.id+' · '+b.nombre+'</h4>'+
+          '<p>'+b.resumen+'</p>'+
+          '<div class="tl-bar"><span style="width:100%; background:'+colorMap[b.color]+';"></span></div>'+
         '</div>';
-    } else {
-      var day = session.day;
-      document.getElementById("seqTitle").textContent = "Hoy: "+day.short;
-      // En este plan ningún ejercicio usa ladder por %1RM (ver dayFull: todos entran
-      // con ladder:null y progresan por variante/tempo vía bw{}), así que ningún día
-      // tiene ladderTag "fuerza" y el banner de tope no se muestra nunca.
-      var weekTop = Math.min(fuerzaTopForWeek(week), 93);
-      var cards = day.ej.map(function(row){ return workoutCardHTML(row, block.id, pd, weekTop); }).join("");
-      var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+weekTop+'% 1RM</span>' : "";
-      mount.innerHTML = '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">'+day.short+waveNote+'</div>'+cards+'</div>';
+      }).join("");
+      document.getElementById("timelineGrid").innerHTML = html;
     }
 
-    document.getElementById("dayPrev").disabled = (pd<=1);
-    document.getElementById("dayNext").disabled = (pd>=TOTAL_PROGRAM_DAYS);
+    function renderWeekGrid(){
+      var tagChip = {gym:"chip-fuerza", home:"chip-movilidad", rest:""};
+      var html = WEEK_TEMPLATE.map(function(d){
+        var chip = d.tag==="rest" ? '<span style="font-size:11.5px;color:var(--ink-3);">—</span>' : '<span class="chip '+tagChip[d.tag]+'">'+(d.tag==="gym"?COPY.chipGym:COPY.chipHome)+'</span>';
+        return '<div class="day-card"><div class="d-num">'+d.num+'</div><div class="d-name">'+d.name+'</div><div class="d-tag">'+chip+'</div></div>';
+      }).join("");
+      document.getElementById("weekGrid").innerHTML = html;
+    }
 
-    recalcRungLabels();
-    wireRungChecks();
-    wireNivelSelects();
-    wireGotoRM();
-  }
+    function ladderTableHTML(exId, ladderType){
+      if(ladderType===null){
+        return '<p style="font-size:12.5px;color:var(--ink-2);">'+COPY.ladderEmptyMsg+'</p>';
+      }
+      var rows = Progression.ladderRungsFor(exId, ladderType, 100).map(function(r){
+        return '<tr><td class="num">'+r.reps+' reps</td><td class="num">'+r.pct+'%</td><td class="num" data-rm-cell="'+exId+'" data-pct="'+r.pct+'" style="font-family:var(--font-mono);font-weight:650;color:var(--accent);">—</td></tr>';
+      }).join("");
+      return '<div class="tbl-scroll"><table style="min-width:0;"><thead><tr><th class="num">Reps</th><th class="num">% 1RM</th><th class="num">Tu peso</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    }
 
-  function recalcRungLabels(){
-    var cells = document.querySelectorAll("#todayMount [data-rm-cell]");
-    cells.forEach(function(c){
-      var id = c.getAttribute("data-rm-cell");
-      var pct = parseFloat(c.getAttribute("data-pct"));
-      c.textContent = kgLabel(id, pct);
-    });
-  }
+    function renderDay(day){
+      var items = day.ej.map(function(row){
+        var e = EXERCISES[row.id];
+      if(!e) return "";
+        var LADDER_CHIP_HTML = { fuerza:'<span class="chip chip-fuerza">Fuerza</span>', hipertrofia:'<span class="chip chip-hipertrofia">Hipertrofia</span>', tensionModerada:'<span class="chip chip-cardio">Tensión moderada</span>' };
+        var ladderChip = row.ladder===null ? "" : (LADDER_CHIP_HTML[row.ladder] || "");
+        return '<div class="card panel" style="margin-bottom:10px;">'+
+          '<div class="ex-name-cell">'+ Icons.svgIcon(e.icon,"ex-icon") +
+            '<div style="flex:1;"><span class="ex-name">'+e.name+'<span class="en">'+e.en+' · '+e.musculos+'</span></span></div>'+
+            ladderChip+
+          '</div>'+
+          '<div style="margin-top:10px;">'+ ladderTableHTML(row.id, row.ladder) +'</div>'+
+          '<div style="margin-top:10px;"><a class="btnlink" href="'+RenderBiblioteca.ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a></div>'+
+        '</div>';
+      }).join("");
+      return '<div class="day-block"><div class="day-title"><h4>'+day.nombre+'</h4></div>'+items+'</div>';
+    }
 
-  function wireRungChecks(){
-    Array.prototype.forEach.call(document.querySelectorAll("#todayMount [data-chk-key]"), function(row){
-      var checkbox = row.querySelector(".rung-check");
-      checkbox.addEventListener("change", function(){
-        var key = row.getAttribute("data-chk-key");
-        if(checkbox.checked){ lsSet(key,"1"); row.classList.add("is-done"); }
-        else { lsRemove(key); row.classList.remove("is-done"); }
+    function renderBlock(b){
+      var chipMap = {amber:"chip-hipertrofia", violet:"chip-cardio", accent:"chip-fuerza", teal:"chip-movilidad"};
+      var days = b.dias.map(renderDay).join("");
+      var html =
+        '<div class="section-head">'+
+          '<div class="section-kicker">'+b.weeks+'</div>'+
+          '<span class="chip '+chipMap[b.color]+'" style="margin-bottom:8px;">'+b.sub+'</span>'+
+          '<h2>Bloque '+b.id+' · '+b.nombre+'</h2>'+
+          '<p class="desc">'+b.resumen+'</p>'+
+        '</div>'+
+        '<div class="callout callout-accent" style="margin-bottom:20px;"><h4>Progresión de este bloque</h4><p>'+b.progresion+'</p></div>'+
+        days;
+      document.getElementById("blockMount-"+b.id).innerHTML = html;
+    }
+
+    function renderMobility(){
+      var rows = MOBILITY.map(function(r){
+        return '<tr><td>'+r[0]+'</td><td><a href="'+RenderBiblioteca.ytLink({name:r[1]})+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td class="num">'+r[2]+'</td><td>'+r[3]+'</td></tr>';
+      }).join("");
+      document.getElementById("mobilityTable").innerHTML = rows;
+    }
+
+    function renderCardio(){
+      var rows = CARDIO.map(function(r){
+        return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="num">'+r[3]+'</td></tr>';
+      }).join("");
+      document.getElementById("cardioTable").innerHTML = rows;
+    }
+
+    return {
+      renderLadderRefTable: renderLadderRefTable,
+      renderRMLog: renderRMLog,
+      renderTimeline: renderTimeline,
+      renderWeekGrid: renderWeekGrid,
+      renderBlock: renderBlock,
+      renderMobility: renderMobility,
+      renderCardio: renderCardio
+    };
+  })();
+
+  var RenderBiblioteca = (function(){
+    function ytLink(e){
+      return "https://www.youtube.com/results?search_query="+encodeURIComponent(e.name+" técnica correcta");
+    }
+
+    function renderLibrary(){
+      var html = Object.keys(EXERCISES).map(function(id){
+        var e = EXERCISES[id];
+        if(!e) return "";
+        var cues = e.cues.map(function(c){ return "<li>"+c+"</li>"; }).join("");
+        var safety = e.safety && SAFETY_MESSAGES[e.safety]
+          ? '<div class="safety-flag">'+(COPY.safetyFlagWarnGlyph?"⚠ ":"")+SAFETY_MESSAGES[e.safety].title+': '+SAFETY_MESSAGES[e.safety].text+'</div>'
+          : "";
+        return '<div class="card exlib-card">'+
+          '<div class="exlib-top">'+ Icons.svgIcon(e.icon,"exlib-icon") +
+            '<div><div class="ex-name">'+e.name+'<span class="en">'+e.en+'</span></div><div style="font-size:11.5px;color:var(--ink-3);margin-top:2px;">'+e.patron+' · '+e.musculos+'</div></div>'+
+          '</div>'+
+          '<ul class="exlib-cues">'+cues+'</ul>'+
+          safety+
+          '<div class="exlib-links">'+
+            '<a class="btnlink" href="'+ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a>'+
+          '</div>'+
+        '</div>';
+      }).join("");
+      document.getElementById("exLibraryGrid").innerHTML = html;
+    }
+
+    return { ytLink: ytLink, renderLibrary: renderLibrary };
+  })();
+
+  var RenderProgreso = (function(){
+    function renderRMList(){
+      var kgRows = Object.keys(EXERCISES).map(function(id){
+        var e = EXERCISES[id];
+        if(!e.loaded) return "";
+        return '<div class="rm-row">'+
+          '<div><div class="rm-name">'+e.name+'</div><div class="rm-pat">'+e.patron+'</div></div>'+
+          '<div class="rm-r"><input class="rm-input" type="number" inputmode="decimal" min="0" step="0.5" id="rm-'+id+'" data-ex="'+id+'" placeholder="—"><span class="kgsuf">kg</span></div>'+
+        '</div>';
+      }).join("");
+      var nivelRows = Object.keys(EXERCISES).map(function(id){
+        var e = EXERCISES[id];
+        if(!e.bw) return "";
+        var opts = [1,2,3,4].map(function(n){ return '<option value="'+n+'">Nivel '+n+'</option>'; }).join("");
+        return '<div class="rm-row">'+
+          '<div><div class="rm-name">'+e.name+'</div><div class="rm-pat">'+e.patron+'</div></div>'+
+          '<div class="rm-r"><select class="rm-input" style="width:auto;" id="rm-nivel-'+id+'" data-nivel-ex="'+id+'"><option value="">—</option>'+opts+'</select></div>'+
+        '</div>';
+      }).join("");
+      var html = "";
+      if(kgRows) html += '<div class="rm-group"><h4 class="rm-group-title">Lo que se mide en kilos</h4>'+kgRows+'</div>';
+      if(nivelRows) html += '<div class="rm-group"><h4 class="rm-group-title">Lo que sube por nivel</h4>'+nivelRows+'</div>';
+      document.getElementById("rmList").innerHTML = html;
+    }
+
+    function recalcAll(){
+      var cells = document.querySelectorAll("[data-rm-cell]");
+      cells.forEach(function(c){
+        var id = c.getAttribute("data-rm-cell");
+        var pct = parseFloat(c.getAttribute("data-pct"));
+        c.textContent = OneRM.kgLabel(id, pct);
       });
-    });
-  }
-
-  function wireNivelSelects(){
-    Array.prototype.forEach.call(document.querySelectorAll("#todayMount [data-nivel-ex]"), function(sel){
-      sel.addEventListener("change", function(){
-        var exId = sel.getAttribute("data-nivel-ex");
-        lsSet("nivel_"+exId, sel.value);
-        recalcAll();
+      Object.keys(EXERCISES).forEach(function(id){
+        var e = EXERCISES[id];
+        if(!e.bw) return;
+        var sel = document.getElementById("rm-nivel-"+id);
+        if(!sel) return;
+        var stored = Storage.lsGet("nivel_"+id);
+        sel.value = (stored===null ? "" : stored);
       });
-    });
-  }
+      RenderHoy.renderToday();
+    }
 
-  function wireGotoRM(){
-    Array.prototype.forEach.call(document.querySelectorAll("[data-goto-rm]"), function(btn){
+    function wireRMInputs(){
+      Object.keys(EXERCISES).forEach(function(id){
+        var e = EXERCISES[id];
+        if(e.loaded){
+          var el = document.getElementById("rm-"+id);
+          if(el){
+            var stored = Storage.lsGet("oneRM_"+id);
+            if(stored !== null) el.value = stored;
+            el.addEventListener("input", function(){
+              if(el.value === "") { Storage.lsRemove("oneRM_"+id); }
+              else { Storage.lsSet("oneRM_"+id, el.value); }
+              recalcAll();
+            });
+          }
+        }
+        if(e.bw){
+          var sel = document.getElementById("rm-nivel-"+id);
+          if(sel){
+            var storedNivel = Storage.lsGet("nivel_"+id);
+            if(storedNivel !== null) sel.value = storedNivel;
+            sel.addEventListener("change", function(){
+              if(sel.value === "") { Storage.lsRemove("nivel_"+id); }
+              else { Storage.lsSet("nivel_"+id, sel.value); }
+              recalcAll();
+            });
+          }
+        }
+      });
+    }
+
+    function wireEpleyCalculator(){
+      var w = document.getElementById("epleyWeight");
+      var r = document.getElementById("epleyReps");
+      var out = document.getElementById("epleyResult");
+      if(!w || !r || !out) return;
+      function recalc(){
+        var weight = parseFloat(w.value);
+        var reps = parseFloat(r.value);
+        if(isNaN(weight) || isNaN(reps) || weight<=0 || reps<=0){ out.textContent = "—"; return; }
+        var oneRM = weight * (1 + reps/30);
+        out.textContent = oneRM.toFixed(1).replace(/\.0$/,"") + " kg";
+      }
+      w.addEventListener("input", recalc);
+      r.addEventListener("input", recalc);
+    }
+
+    return { renderRMList: renderRMList, recalcAll: recalcAll, wireRMInputs: wireRMInputs, wireEpleyCalculator: wireEpleyCalculator };
+  })();
+
+  var RenderHoy = (function(){
+    var hoyState = { programDay:1 };
+
+    function loadHoyState(){
+      var pd = parseInt(Storage.lsGet("plan_day_seq"),10);
+      hoyState.programDay = (pd>=1 && pd<=Schedule.TOTAL_PROGRAM_DAYS) ? pd : 1;
+    }
+    function saveProgramDay(){ Storage.lsSet("plan_day_seq", String(hoyState.programDay)); }
+
+    function renderWeekBanners(week){
+      var html = "";
+      var isDeload = DELOAD_WEEKS.indexOf(week)!==-1;
+      var isRetest = RETEST_WEEKS.indexOf(week)!==-1;
+      if(isDeload){
+        html += '<div class="banner banner-deload"><b>Semana de deload</b>Reduce el volumen a la mitad esta semana (menos series, misma técnica). El cuerpo consolida lo acumulado antes de subir de nivel.</div>';
+      }
+      if(isRetest){
+        var block = Schedule.blockForWeek(week);
+        var atras = Object.keys(EXERCISES).filter(function(id){
+          var e = EXERCISES[id];
+          return e.bw && Progression.nivelActual(id, block.id) < block.id;
+        }).map(function(id){ return EXERCISES[id].name; });
+        var retestBody = atras.length ? COPY.retestMsgWithLevels(block.id, atras) : COPY.retestMsgNoLevels();
+        html += '<div class="banner banner-retest"><b>'+COPY.retestTitle+'</b>'+retestBody+'</div>';
+      }
+      document.getElementById("weekBanners").innerHTML = html;
+    }
+
+    function rungRowHTML(exId, ladderType, rung, idx, storageKey){
+      var checked = Storage.lsGet(storageKey) === "1";
+      return '<label class="rung-row'+(checked?" is-done":"")+'" data-chk-key="'+storageKey+'">'+
+        '<input type="checkbox" class="rung-check"'+(checked?" checked":"")+'>'+
+        '<span class="rung-reps">Serie '+(idx+1)+' · '+rung.reps+' reps <span class="rung-pct">('+rung.pct+'% 1RM)</span></span>'+
+        '<span class="rung-kg" data-rm-cell="'+exId+'" data-pct="'+rung.pct+'">—</span>'+
+      '</label>';
+    }
+
+    function workoutCardHTML(row, blockId, programDay, weekTopPct){
+      var e = EXERCISES[row.id];
+      if(!e) return "";
+      var body, nivelControls = "";
+      if(row.ladder===null){
+        var nivel = Progression.nivelActual(row.id, blockId);
+        var dose = (e.bw && e.bw[nivel]) ? e.bw[nivel] : {sets:3, variante:"", dosis:"progresión gradual"};
+        var bwRows = [];
+        for(var si=0; si<dose.sets; si++){
+          var bwKey = "chk_pd"+programDay+"_"+row.id+"_"+si;
+          var bwChecked = Storage.lsGet(bwKey) === "1";
+          bwRows.push('<label class="rung-row'+(bwChecked?" is-done":"")+'" data-chk-key="'+bwKey+'">'+
+            '<input type="checkbox" class="rung-check"'+(bwChecked?" checked":"")+'>'+
+            '<span class="rung-reps">Serie '+(si+1)+' · '+dose.dosis+'</span>'+
+          '</label>');
+        }
+        body = bwRows.join("");
+        if(e.bw){
+          var opts = [1,2,3,4].map(function(n){
+            return '<option value="'+n+'"'+(n===nivel?" selected":"")+'>Nivel '+n+'</option>';
+          }).join("");
+          nivelControls = '<select class="nivel-select" data-nivel-ex="'+row.id+'">'+opts+'</select>';
+          var nvRows = [1,2,3,4].map(function(n){
+            var lv = e.bw[n];
+            return '<div class="nv-row'+(n===nivel?" is-current":"")+'"><span class="nv-dot">'+(n===nivel?"●":n)+'</span><span>'+lv.variante+' · '+lv.dosis+'</span></div>';
+          }).join("");
+          body += '<details class="niveles"><summary></summary><div class="niveles-list">'+nvRows+'</div></details>';
+        }
+      } else {
+        var rm = OneRM.getRM(row.id);
+        var rungs = (row.ladder==="fuerza") ? Progression.ladderRungsFor(row.id, row.ladder, weekTopPct) : Progression.LADDER[row.ladder];
+        var rows = rungs.map(function(r,i){
+          var key = "chk_pd"+programDay+"_"+row.id+"_"+i;
+          return rungRowHTML(row.id, row.ladder, r, i, key);
+        }).join("");
+        body = rows;
+        if(rm===null){
+          body += '<div class="rm-nudge" style="margin-top:8px;"><span>Falta tu 1RM para calcular el peso.</span><button type="button" data-goto-rm data-focus-ex="'+row.id+'">Ingresar</button></div>';
+        }
+      }
+      var safety = e.safety && SAFETY_MESSAGES[e.safety]
+        ? '<div class="safety-flag">'+(COPY.safetyFlagWarnGlyph?"⚠ ":"")+SAFETY_MESSAGES[e.safety].title+': '+SAFETY_MESSAGES[e.safety].text+'</div>'
+        : "";
+      var cues = e.cues.map(function(c){ return "<li>"+c+"</li>"; }).join("");
+      var videoBtn = '<a class="btnlink" href="'+RenderBiblioteca.ytLink(e)+'" target="_blank" rel="noopener">Ver video ↗</a>';
+      return '<div class="card panel wk-card">'+
+        '<div class="wk-head">'+ Icons.svgIcon(e.icon,"ex-icon") +
+          '<div><div class="wk-name">'+e.name+'</div><div class="wk-sub">'+e.en+' · '+e.musculos+'</div></div>'+
+        '</div>'+
+        '<div class="wk-controls">'+nivelControls+videoBtn+'</div>'+
+        '<div style="margin-top:10px;">'+body+'</div>'+
+        safety+
+        '<details class="tech"><summary></summary><ul class="exlib-cues">'+cues+'</ul></details>'+
+      '</div>';
+    }
+
+    function renderToday(){
+      var pd = hoyState.programDay;
+      var week = Schedule.weekFromProgramDay(pd);
+      var dow = Schedule.dowFromProgramDay(pd);
+      var block = Schedule.blockForWeek(week);
+      var session = Schedule.resolveSession(block, dow);
+
+      document.getElementById("seqSubtitle").textContent = "Semana "+week+" de 24 · Día "+dow+" de 7 de tu ciclo";
+      renderWeekBanners(week);
+      document.getElementById("blockTag").innerHTML = 'Bloque '+block.id+' · <b>'+block.nombre+'</b> ('+block.sub+') — '+block.weeks;
+
+      var mount = document.getElementById("todayMount");
+
+      if(session.type==="rest"){
+        document.getElementById("seqTitle").textContent = "Hoy: descanso";
+        mount.innerHTML = '<div class="card panel rest-card">'+
+          '<h3>Día de descanso</h3>'+
+          '<p>No entrenas hoy. Duerme bien, hidrátate y deja que el cuerpo asimile lo trabajado. Mañana retoma donde corresponda.</p>'+
+        '</div>';
+      } else if(session.type==="casa"){
+        document.getElementById("seqTitle").textContent = "Hoy: movilidad y cardio (casa)";
+        var mobRows = MOBILITY.filter(function(r){ return r[0]==="Todos" || r[0].indexOf(String(block.id))!==-1; })
+          .map(function(r){ return '<tr><td><a href="'+RenderBiblioteca.ytLink({name:r[1]})+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td class="num">'+r[2]+'</td><td>'+r[3]+'</td></tr>'; }).join("");
+        var cardioRow = CARDIO[block.id-1];
+        mount.innerHTML =
+          '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">Movilidad y flexibilidad</div>'+
+          '<div class="tbl-scroll"><table><thead><tr><th>Ejercicio</th><th class="num">Dosis</th><th>Foco</th></tr></thead><tbody>'+mobRows+'</tbody></table></div>'+
+          '<div class="callout '+COPY.homeWarningClass+'" style="margin-top:14px;"><h4>'+(COPY.homeWarningGlyph?"⚠ ":"")+HOME_DAY_WARNING.title+'</h4><p>'+HOME_DAY_WARNING.text+'</p></div>'+
+          '<div class="section-kicker" style="margin-top:20px;">Cardio de hoy'+(COPY.cardioOptional?" (opcional)":"")+'</div>'+
+          '<div class="card panel" style="margin-top:8px;"><p style="font-size:13.5px;"><strong>'+cardioRow[2]+'</strong><br><span style="color:var(--ink-2); font-size:12.5px;">'+cardioRow[1]+' · '+cardioRow[3]+'</span></p></div>'+
+          '</div>';
+      } else {
+        var day = session.day;
+        document.getElementById("seqTitle").textContent = "Hoy: "+day.short;
+        var weekTop = Progression.fuerzaTopForWeek(week);
+        var cards = day.ej.map(function(row){ return workoutCardHTML(row, block.id, pd, weekTop); }).join("");
+        var displayTop = weekTop;
+        if(day.ladderTag==="fuerza"){
+          day.ej.forEach(function(row){
+            if(row.ladder==="fuerza"){
+              var exCap = (EXERCISES[row.id] && EXERCISES[row.id].capFuerza) || 100;
+              displayTop = Math.min(displayTop, exCap);
+            }
+          });
+        }
+        var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+displayTop+'% 1RM</span>' : "";
+        mount.innerHTML = '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">'+day.short+waveNote+'</div>'+cards+'</div>';
+      }
+
+      document.getElementById("dayPrev").disabled = (pd<=1);
+      document.getElementById("dayNext").disabled = (pd>=Schedule.TOTAL_PROGRAM_DAYS);
+
+      recalcRungLabels();
+      wireRungChecks();
+      wireNivelSelects();
+      wireGotoRM();
+    }
+
+    function recalcRungLabels(){
+      var cells = document.querySelectorAll("#todayMount [data-rm-cell]");
+      cells.forEach(function(c){
+        var id = c.getAttribute("data-rm-cell");
+        var pct = parseFloat(c.getAttribute("data-pct"));
+        c.textContent = OneRM.kgLabel(id, pct);
+      });
+    }
+
+    function wireRungChecks(){
+      Array.prototype.forEach.call(document.querySelectorAll("#todayMount [data-chk-key]"), function(row){
+        var checkbox = row.querySelector(".rung-check");
+        checkbox.addEventListener("change", function(){
+          var key = row.getAttribute("data-chk-key");
+          if(checkbox.checked){ Storage.lsSet(key,"1"); row.classList.add("is-done"); }
+          else { Storage.lsRemove(key); row.classList.remove("is-done"); }
+        });
+      });
+    }
+
+    function wireNivelSelects(){
+      Array.prototype.forEach.call(document.querySelectorAll("#todayMount [data-nivel-ex]"), function(sel){
+        sel.addEventListener("change", function(){
+          var exId = sel.getAttribute("data-nivel-ex");
+          Storage.lsSet("nivel_"+exId, sel.value);
+          RenderProgreso.recalcAll();
+        });
+      });
+    }
+
+    function wireGotoRM(){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-goto-rm]"), function(btn){
+        btn.addEventListener("click", function(){
+          var exId = btn.getAttribute("data-focus-ex");
+          Tabs.switchTab("rm");
+          setTimeout(function(){
+            var input = document.getElementById("rm-"+exId);
+            if(input){ input.focus(); }
+          }, 50);
+        });
+      });
+    }
+
+    function goToProgramDay(pd){
+      hoyState.programDay = Math.max(1, Math.min(Schedule.TOTAL_PROGRAM_DAYS, pd));
+      saveProgramDay();
+      renderToday();
+    }
+    function wireSeqNav(){
+      document.getElementById("dayPrev").addEventListener("click", function(){ goToProgramDay(hoyState.programDay-1); });
+      document.getElementById("dayNext").addEventListener("click", function(){ goToProgramDay(hoyState.programDay+1); });
+      document.getElementById("jumpGo").addEventListener("click", function(){
+        var w = parseInt(document.getElementById("jumpWeek").value,10);
+        if(w>=1 && w<=24){ goToProgramDay((w-1)*7+1); }
+      });
+    }
+
+    return {
+      renderToday: renderToday,
+      goToProgramDay: goToProgramDay,
+      loadHoyState: loadHoyState,
+      saveProgramDay: saveProgramDay,
+      wireSeqNav: wireSeqNav,
+      wireRungChecks: wireRungChecks,
+      wireNivelSelects: wireNivelSelects,
+      wireGotoRM: wireGotoRM
+    };
+  })();
+
+  var Tabs = (function(){
+    function switchTab(name){
+      Array.prototype.forEach.call(document.querySelectorAll(".tab-panel"), function(p){
+        p.classList.toggle("is-active", p.getAttribute("data-tab")===name);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-tab-btn]"), function(btn){
+        btn.classList.toggle("is-active", btn.getAttribute("data-tab-btn")===name);
+      });
+      Storage.lsSet("plan_tab", name);
+      window.scrollTo(0,0);
+    }
+    function wireTabs(){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-tab-btn]"), function(btn){
+        btn.addEventListener("click", function(){ switchTab(btn.getAttribute("data-tab-btn")); });
+      });
+    }
+    return { switchTab: switchTab, wireTabs: wireTabs };
+  })();
+
+  var Theme = (function(){
+    function initTheme(){
+      var btn = document.getElementById("themeToggle");
+      var stored = Storage.lsGet("plan_theme");
+      if(stored){ document.documentElement.setAttribute("data-theme", stored); }
       btn.addEventListener("click", function(){
-        var exId = btn.getAttribute("data-focus-ex");
-        switchTab("rm");
-        setTimeout(function(){
-          var input = document.getElementById("rm-"+exId);
-          if(input){ input.focus(); }
-        }, 50);
+        var current = document.documentElement.getAttribute("data-theme");
+        var next = current==="dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        Storage.lsSet("plan_theme", next);
       });
-    });
-  }
-
-  function goToProgramDay(pd){
-    hoyState.programDay = Math.max(1, Math.min(TOTAL_PROGRAM_DAYS, pd));
-    saveProgramDay();
-    renderToday();
-  }
-  function wireSeqNav(){
-    document.getElementById("dayPrev").addEventListener("click", function(){ goToProgramDay(hoyState.programDay-1); });
-    document.getElementById("dayNext").addEventListener("click", function(){ goToProgramDay(hoyState.programDay+1); });
-    document.getElementById("jumpGo").addEventListener("click", function(){
-      var w = parseInt(document.getElementById("jumpWeek").value,10);
-      if(w>=1 && w<=24){ goToProgramDay((w-1)*7+1); }
-    });
-  }
-
-  /* ================= TABS ================= */
-  function switchTab(name){
-    Array.prototype.forEach.call(document.querySelectorAll(".tab-panel"), function(p){
-      p.classList.toggle("is-active", p.getAttribute("data-tab")===name);
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-tab-btn]"), function(btn){
-      btn.classList.toggle("is-active", btn.getAttribute("data-tab-btn")===name);
-    });
-    lsSet("plan_tab", name);
-    window.scrollTo(0,0);
-  }
-  function wireTabs(){
-    Array.prototype.forEach.call(document.querySelectorAll("[data-tab-btn]"), function(btn){
-      btn.addEventListener("click", function(){ switchTab(btn.getAttribute("data-tab-btn")); });
-    });
-  }
-
-  /* ================= THEME TOGGLE ================= */
-  function initTheme(){
-    var btn = document.getElementById("themeToggle");
-    var stored = lsGet("plan_theme");
-    if(stored){ document.documentElement.setAttribute("data-theme", stored); }
-    btn.addEventListener("click", function(){
-      var current = document.documentElement.getAttribute("data-theme");
-      var next = current==="dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
-      lsSet("plan_theme", next);
-    });
-  }
+    }
+    return { initTheme: initTheme };
+  })();
 
   /* ================= INIT ================= */
   function init(){
     // Este plan no muestra tablas de referencia de ladder por %1RM: ningún
     // ejercicio usa porcentaje (ver bloque DATOS). renderLadderRefTable() queda
     // definida en el motor pero sin puntos de montaje que llamar.
-    renderRMList();
-    renderRMLog();
-    renderTimeline();
-    renderWeekGrid();
-    BLOCKS.forEach(renderBlock);
-    renderMobility();
-    renderCardio();
-    renderLibrary();
-    wireRMInputs();
-    wireEpleyCalculator();
+    RenderProgreso.renderRMList();
+    RenderPlanCompleto.renderRMLog();
+    RenderPlanCompleto.renderTimeline();
+    RenderPlanCompleto.renderWeekGrid();
+    BLOCKS.forEach(RenderPlanCompleto.renderBlock);
+    RenderPlanCompleto.renderMobility();
+    RenderPlanCompleto.renderCardio();
+    RenderBiblioteca.renderLibrary();
+    RenderProgreso.wireRMInputs();
+    RenderProgreso.wireEpleyCalculator();
 
-    loadHoyState();
-    wireSeqNav();
-    renderToday();
+    RenderHoy.loadHoyState();
+    RenderHoy.wireSeqNav();
+    RenderHoy.renderToday();
 
-    wireTabs();
-    var savedTab = lsGet("plan_tab");
-    if(savedTab){ switchTab(savedTab); }
+    Tabs.wireTabs();
+    var savedTab = Storage.lsGet("plan_tab");
+    if(savedTab){ Tabs.switchTab(savedTab); }
 
-    initTheme();
+    Theme.initTheme();
   }
 
   if(document.readyState === "loading"){
