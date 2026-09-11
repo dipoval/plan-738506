@@ -1282,16 +1282,29 @@
         document.getElementById("seqTitle").textContent = "Hoy: "+day.short;
         var weekTop = Progression.fuerzaTopForWeek(week);
         var cards = day.ej.map(function(row){ return workoutCardHTML(row, block.id, pd, weekTop); }).join("");
-        var displayTop = weekTop;
+        // Tope mostrado = el más alto que hoy realmente se prescribe: la onda de la
+        // semana, recortada por el cap más alto entre los ejercicios de fuerza del
+        // día (si TODOS están capados, como en un perfil con dolor activo, el banner
+        // baja al cap). Los ejercicios con un cap propio por debajo de ese tope se
+        // listan aparte — antes el banner tomaba el mínimo de los caps y decía
+        // "93%" en un día donde otro ejercicio sí llegaba a 99%.
+        var displayTop = weekTop, maxCap = 0, capped = [];
         if(day.ladderTag==="fuerza"){
           day.ej.forEach(function(row){
             if(row.ladder==="fuerza"){
               var exCap = (EXERCISES[row.id] && EXERCISES[row.id].capFuerza) || 100;
-              displayTop = Math.min(displayTop, exCap);
+              maxCap = Math.max(maxCap, exCap);
+            }
+          });
+          if(maxCap) displayTop = Math.min(displayTop, maxCap);
+          day.ej.forEach(function(row){
+            if(row.ladder==="fuerza"){
+              var exCap2 = (EXERCISES[row.id] && EXERCISES[row.id].capFuerza) || 100;
+              if(exCap2 < displayTop) capped.push(EXERCISES[row.id].name.toLowerCase()+" se detiene en "+exCap2+"%");
             }
           });
         }
-        var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+displayTop+'% 1RM</span>' : "";
+        var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+displayTop+'% 1RM'+(capped.length?" · "+capped.join(", "):"")+'</span>' : "";
         mount.innerHTML = '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">'+day.short+waveNote+'</div>'+cards+'</div>';
       }
 
