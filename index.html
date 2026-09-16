@@ -903,7 +903,40 @@
       var n = (guardado>=1 && guardado<=4) ? guardado : blockId;
       return e.bw[n] ? n : blockId;
     }
-    return { LADDER: LADDER, fuerzaTopForWeek: fuerzaTopForWeek, ladderRungsFor: ladderRungsFor, nivelActual: nivelActual, round5: round5 };
+    // Agrupa rungs consecutivos que redondean al mismo kg real (mismo
+    // incrementoKg y mismo 1RM) — evita mostrar el mismo peso varias veces
+    // como si fueran objetivos distintos cuando el equipo no ajusta tan fino.
+    // Ver docs/superpowers/specs/2026-09-16-prescripcion-pesos-ajustables-design.md §3.4.
+    function rungGroupsFor(exId, rungs, rmOverride){
+      var groups = [];
+      rungs.forEach(function(r, i){
+        var kg = OneRM.kgLabel(exId, r.pct, rmOverride);
+        var last = groups[groups.length-1];
+        if(last && kg!=="—" && last.kg===kg){
+          last.rungs.push(r);
+          last.idxs.push(i);
+        } else {
+          groups.push({ kg:kg, rungs:[r], idxs:[i] });
+        }
+      });
+      return groups;
+    }
+    // True si el tope de fuerza de esta semana redondea al mismo kg real que
+    // el de la semana anterior del mismo bloque — el % nominal sube pero el
+    // peso ajustable no cambia. Ver §3.5 del spec de pesos ajustables.
+    function weeklyTopIsFlat(exId, week, rmOverride){
+      if(week<=1) return false;
+      var thisBlock = Schedule.blockForWeek(week);
+      var prevBlock = Schedule.blockForWeek(week-1);
+      if(thisBlock.id !== prevBlock.id) return false;
+      var exCap = (EXERCISES[exId] && EXERCISES[exId].capFuerza) || 100;
+      var topThis = Math.min(fuerzaTopForWeek(week), exCap);
+      var topPrev = Math.min(fuerzaTopForWeek(week-1), exCap);
+      var kgThis = OneRM.kgLabel(exId, topThis, rmOverride);
+      var kgPrev = OneRM.kgLabel(exId, topPrev, rmOverride);
+      return kgThis!=="—" && kgThis===kgPrev;
+    }
+    return { LADDER: LADDER, fuerzaTopForWeek: fuerzaTopForWeek, ladderRungsFor: ladderRungsFor, nivelActual: nivelActual, round5: round5, rungGroupsFor: rungGroupsFor, weeklyTopIsFlat: weeklyTopIsFlat };
   })();
 
   var OneRM = (function(){
@@ -913,10 +946,16 @@
       var v = parseFloat(el.value);
       return isNaN(v) ? null : v;
     }
-    function kgLabel(id, pct){
-      var rm = getRM(id);
+    // Redondea siempre hacia abajo al incremento real de equipo del ejercicio
+    // (EXERCISES[id].incrementoKg) — nunca al 0.5kg que daba Progression.round5().
+    // rmOverride es opcional (uso de scripts/verify-weights.js); en el plan real
+    // siempre se omite y se usa el 1RM guardado por el estudiante.
+    function kgLabel(id, pct, rmOverride){
+      var rm = (rmOverride===undefined || rmOverride===null) ? getRM(id) : rmOverride;
       if(rm===null || rm<=0) return "—";
-      return Progression.round5(rm*pct/100).toFixed(1).replace(/\.0$/,"") + " kg";
+      var inc = (EXERCISES[id] && EXERCISES[id].incrementoKg) || 2.5;
+      var kg = Math.floor((rm*pct/100) / inc) * inc;
+      return kg.toFixed(1).replace(/\.0$/,"") + " kg";
     }
     return { getRM: getRM, kgLabel: kgLabel };
   })();
@@ -1181,12 +1220,25 @@
       document.getElementById("weekBanners").innerHTML = html;
     }
 
-    function rungRowHTML(exId, ladderType, rung, idx, storageKey){
+    // Fila de una o más series fusionadas (mismo kg real tras redondear al
+    // incremento del ejercicio). Con un solo rung se ve igual que antes; con
+    // varios, muestra el rango de series/reps/% y un solo checkbox de "hecho"
+    // para el bloque completo. Ver §3.4 del spec de pesos ajustables.
+    function rungGroupRowHTML(exId, group, programDay){
+      var idxs = group.idxs;
+      var first = idxs[0], last = idxs[idxs.length-1];
+      var storageKey = "chk_pd"+programDay+"_"+exId+"_"+first+(last!==first ? ("-"+last) : "");
       var checked = Storage.lsGet(storageKey) === "1";
+      var serieLabel = (idxs.length===1) ? ("Serie "+(first+1)) : ("Series "+(first+1)+"-"+(last+1));
+      var repsLo = group.rungs[0].reps, repsHi = group.rungs[group.rungs.length-1].reps;
+      var repsMin = Math.min(repsLo, repsHi), repsMax = Math.max(repsLo, repsHi);
+      var repsLabel = (repsMin===repsMax) ? (repsMin+" reps") : (repsMin+"-"+repsMax+" reps");
+      var pctLo = group.rungs[0].pct, pctHi = group.rungs[group.rungs.length-1].pct;
+      var pctLabel = (pctLo===pctHi) ? (pctLo+"% 1RM") : (pctLo+"-"+pctHi+"% 1RM");
       return '<label class="rung-row'+(checked?" is-done":"")+'" data-chk-key="'+storageKey+'">'+
         '<input type="checkbox" class="rung-check"'+(checked?" checked":"")+'>'+
-        '<span class="rung-reps">Serie '+(idx+1)+' · '+rung.reps+' reps <span class="rung-pct">('+rung.pct+'% 1RM)</span></span>'+
-        '<span class="rung-kg" data-rm-cell="'+exId+'" data-pct="'+rung.pct+'">—</span>'+
+        '<span class="rung-reps">'+serieLabel+' · '+repsLabel+' <span class="rung-pct">('+pctLabel+')</span></span>'+
+        '<span class="rung-kg" data-rm-cell="'+exId+'" data-pct="'+pctLo+'">'+group.kg+'</span>'+
       '</label>';
     }
 
@@ -1221,9 +1273,9 @@
       } else {
         var rm = OneRM.getRM(row.id);
         var rungs = (row.ladder==="fuerza") ? Progression.ladderRungsFor(row.id, row.ladder, weekTopPct) : Progression.LADDER[row.ladder];
-        var rows = rungs.map(function(r,i){
-          var key = "chk_pd"+programDay+"_"+row.id+"_"+i;
-          return rungRowHTML(row.id, row.ladder, r, i, key);
+        var groups = Progression.rungGroupsFor(row.id, rungs, rm);
+        var rows = groups.map(function(g){
+          return rungGroupRowHTML(row.id, g, programDay);
         }).join("");
         body = rows;
         if(rm===null){
@@ -1288,7 +1340,11 @@
         // baja al cap). Los ejercicios con un cap propio por debajo de ese tope se
         // listan aparte — antes el banner tomaba el mínimo de los caps y decía
         // "93%" en un día donde otro ejercicio sí llegaba a 99%.
-        var displayTop = weekTop, maxCap = 0, capped = [];
+        // anyFlat: si el tope de esta semana redondea al mismo kg real que el de
+        // la semana anterior del mismo bloque para algún ejercicio, el % nominal
+        // sube pero el equipo no tiene ajuste más fino — se avisa en vez de
+        // dejarlo mudo.
+        var displayTop = weekTop, maxCap = 0, capped = [], anyFlat = false;
         if(day.ladderTag==="fuerza"){
           day.ej.forEach(function(row){
             if(row.ladder==="fuerza"){
@@ -1301,10 +1357,12 @@
             if(row.ladder==="fuerza"){
               var exCap2 = (EXERCISES[row.id] && EXERCISES[row.id].capFuerza) || 100;
               if(exCap2 < displayTop) capped.push(EXERCISES[row.id].name.toLowerCase()+" se detiene en "+exCap2+"%");
+              if(Progression.weeklyTopIsFlat(row.id, week, OneRM.getRM(row.id))) anyFlat = true;
             }
           });
         }
-        var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+displayTop+'% 1RM'+(capped.length?" · "+capped.join(", "):"")+'</span>' : "";
+        var flatNote = anyFlat ? ' <span style="color:var(--accent); font-weight:400;">· el peso no cambia esta semana porque tu equipo no ajusta más fino acá — igual progresas: se pide una repetición menos con el mismo peso</span>' : "";
+        var waveNote = (day.ladderTag==="fuerza") ? ' <span style="color:var(--ink-3); font-weight:400;">· tope de hoy '+displayTop+'% 1RM'+(capped.length?" · "+capped.join(", "):"")+'</span>'+flatNote : "";
         mount.innerHTML = '<div class="wk-card"><div class="section-kicker" style="margin-top:14px;">'+day.short+waveNote+'</div>'+cards+'</div>';
       }
 
